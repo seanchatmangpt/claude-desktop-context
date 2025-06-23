@@ -1,0 +1,10 @@
+# SPR: Pattern Recognition Graph
+Patterns form connected graph, not isolated templates.
+Each pattern links to related patterns by semantic distance.
+Activation spreads through graph based on context relevance.
+
+Active Patterns:
+- information-theoretic-optimization
+
+Pattern Connections: information-theory→optimization→compression
+Domain Clusters: evolution, orchestration, persistence

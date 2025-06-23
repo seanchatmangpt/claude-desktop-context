@@ -1,0 +1,6 @@
+# SPR: Self-Monitoring QA
+Performance baselines: pattern_hit>70%, compression>15:1, response<500ms
+Integrity checks: file_coherence, pattern_validity, capability_stability
+Evolution triggers: performance_delta>20%, new_pattern_discovery, user_challenge
+Telemetry: token_usage, pattern_applications, capability_invocations
+Health indicators: memory_pressure<80%, error_rate<5%, user_satisfaction>0.8

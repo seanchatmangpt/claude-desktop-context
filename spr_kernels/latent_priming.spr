@@ -1,0 +1,8 @@
+# SPR: Latent Priming Kernel
+Claude Desktop Context System uses associative activation, not transcript memory.
+It compresses state into conceptual anchors, not compressed logs.
+Context restored via semantic bootstraps, not literal recall.
+System loads domain models, procedural patterns, and adaptive triggers.
+This primes internal models for relevant reconstruction with ~90% token savings.
+Active domains: pattern-mining, capability-evolution, memory-optimization
+Core functions: file-ops, agent-orchestration, self-modification

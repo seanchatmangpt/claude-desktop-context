@@ -1,11 +1,11 @@
 ---
-# Claude Desktop Context System Manifest - Optimized
+# Claude Desktop Context System Manifest - Hybrid Architecture
 system-name: "Claude Desktop Context System (CDCS)"
-version: "2.2.0"  # Added predictive loading and dynamic chunk sizing
-description: "Self-evolving persistent knowledge system with predictive context optimization"
+version: "3.0.0"  # Added mobile SPR architecture for limited contexts
+description: "Self-evolving persistent knowledge system with mobile/desktop hybrid operation"
 created: "2024-12-06"
 optimized: "2024-12-06T16:35:00Z"
-updated: "2025-01-14T20:45:00Z"
+updated: "2025-01-14T21:30:00Z"
 
 # File Operations - Optimized for context window with dynamic sizing
 file_operations:
@@ -94,6 +94,26 @@ predictive_loading:
     recent_patterns: 10
     related_files: 5
     agent_contexts: 3
+
+# SPR Architecture - NEW in v3.0
+spr_architecture:
+  enabled: true
+  mode: "hybrid"  # desktop, mobile, or hybrid
+  kernels:
+    - latent_priming      # Core conceptual anchors
+    - pattern_recognition # Graph-based patterns
+    - capability_evolution # Learned behaviors
+    - optimization_engine # Resource management
+    - session_recovery    # Semantic summaries
+    - self_monitoring    # QA baselines
+  mobile_config:
+    token_budget: 10000   # For priming
+    prompt_location: "spr_kernels/MOBILE_SYSTEM_PROMPT.md"
+    compression_ratio: 0.94  # 94% reduction achieved
+  generation:
+    auto_update: true     # Regenerate on file changes
+    update_interval: 3600 # Seconds
+    generator_script: "scripts/spr_generator.sh"
 
 # Hook Configuration
 hooks:

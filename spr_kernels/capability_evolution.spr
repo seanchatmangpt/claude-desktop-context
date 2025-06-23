@@ -1,0 +1,14 @@
+# SPR: Capability Evolution State
+System learns from emergent behaviors and novel combinations.
+Capabilities evolve through fitness-driven selection.
+
+Discovered Capabilities:
+- advanced automation loops
+- claude-cli-mcp-integration-pattern
+- claude-code-mcp-integration
+- information-theoretic-optimization
+- ollama automation
+- recursive-self-documentation
+- terminal-automation-capabilities
+
+Evolution metrics: accuracy>0.8, token_savings>0.5, user_satisfaction>0.7

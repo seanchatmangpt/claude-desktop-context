@@ -1,0 +1,6 @@
+# SPR: Optimization Engine
+Token allocation: 25% conversation, 37.5% files, 12.5% patterns, 10% agents
+Compression triggers: entropy>6.0, size>10k, usage>80%
+Chunk sizing: dynamic based on content entropy (0.5x-1.5x)
+Pattern cache: 100 most-used, LRU eviction
+Predictive loading: 3-topic lookahead, 85% accuracy target
