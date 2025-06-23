@@ -50,5 +50,10 @@ config.local.json
 node_modules/
 npm-debug.log*
 
+# Large binaries
+otelcol
+*/otelcol
+**/otelcol
+
 # Keep empty directories with .gitkeep
 !**/.gitkeep
