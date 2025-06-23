@@ -1,0 +1,79 @@
+# Nuxt Performance Optimization SPR Kernel v1.0
+# Performance patterns for maximum Nuxt.js application efficiency
+
+## Bundle Optimization
+- Dynamic imports: `defineAsyncComponent()` for code splitting
+- Tree-shaking: eliminate unused code automatically
+- Module federation: share dependencies across applications
+- Chunk optimization: strategic bundle splitting
+- Lazy loading: load components/pages on demand
+
+## Image Optimization
+- `<NuxtImg>`: automatic format conversion (WebP, AVIF)
+- Responsive images: `sizes` attribute for different viewports
+- Image preloading: critical images loaded early
+- Lazy loading: off-screen images loaded on scroll
+- CDN integration: optimized delivery networks
+
+## SSR Performance
+- Streaming: render and send HTML progressively
+- Component hydration: selective client-side activation
+- Payload reduction: minimize serialized data
+- Critical CSS: inline above-the-fold styles
+- Resource hints: preload, prefetch, preconnect
+
+## Build Performance
+- Vite optimizations: fast HMR and build times
+- TypeScript optimization: incremental compilation
+- Asset optimization: minification and compression
+- Source map configuration: development vs production
+- Module resolution: efficient import strategies
+
+## Runtime Performance
+- Virtual scrolling: large list optimization
+- Debouncing/throttling: prevent excessive API calls
+- Memoization: cache expensive computations
+- Event listener cleanup: prevent memory leaks
+- Intersection Observer: efficient scroll-based loading
+
+## Lighthouse Optimization
+- Core Web Vitals: LCP, FID, CLS optimization
+- Performance score: 90+ target through systematic optimization
+- SEO optimization: meta tags, structured data
+- Accessibility: semantic HTML, ARIA labels
+- Best practices: HTTPS, security headers
+
+## Caching Strategies
+- Static assets: long-term caching with versioning
+- API responses: intelligent cache invalidation
+- Service workers: offline functionality
+- Browser caching: proper cache headers
+- CDN caching: global content distribution
+
+## Database Performance
+- Query optimization: efficient database access
+- Connection pooling: reduce connection overhead
+- Indexing strategies: fast data retrieval
+- Pagination: handle large datasets efficiently
+- Data prefetching: anticipate user needs
+
+## Monitoring & Analytics
+- Performance metrics: real-time monitoring
+- Error tracking: catch and resolve issues quickly
+- User experience: track core metrics
+- Bundle analysis: identify optimization opportunities
+- Resource usage: memory and CPU monitoring
+
+## Deployment Optimization
+- Static generation: pre-render pages when possible
+- Edge functions: deploy logic close to users
+- Compression: gzip/brotli for smaller payloads
+- HTTP/2: multiplexed connections
+- CDN configuration: optimal caching strategies
+
+## Development Performance
+- Hot module replacement: instant feedback
+- Build caching: faster development builds
+- TypeScript performance: optimized type checking
+- Dev server optimization: reduced startup time
+- Watch mode efficiency: selective file monitoring

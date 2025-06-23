@@ -1,0 +1,75 @@
+# Nuxt Auto-imports Optimization SPR Kernel v1.0
+# Optimize auto-import patterns for better DX and performance
+
+## Auto-import Categories (80% Usage)
+- Components: ~/components/** auto-imported with PascalCase
+- Composables: ~/composables/** auto-imported with camelCase
+- Utils: ~/utils/** auto-imported as named exports
+- Modules: Each module contributes auto-imports
+- Vue APIs: ref, computed, watch auto-imported from Vue
+- Nuxt APIs: navigateTo, useFetch, useRoute auto-imported
+
+## Component Auto-import Patterns
+- Nested components: components/Base/Button.vue → <BaseButton>
+- Index files: components/Card/index.vue → <Card>
+- Prefix patterns: components/V/Button.vue → <VButton>
+- Dynamic imports: defineAsyncComponent for lazy loading
+- Global components: Register in nuxt.config for all pages
+- Scoped imports: Import only where needed for tree-shaking
+
+## Composable Auto-import Optimization
+- Naming convention: useAuth, useUser, useApi patterns
+- Return patterns: Return reactive objects, not functions
+- Side effects: Avoid side effects in composable initialization
+- TypeScript: Proper return type definitions
+- Dependencies: Clear dependency injection patterns
+- Lifecycle: Proper cleanup in onUnmounted
+
+## Auto-import Conflicts Resolution
+- Module conflicts: Explicit imports override auto-imports
+- Naming collisions: Use import aliases or prefixes
+- Type conflicts: Explicit type imports when needed
+- Global conflicts: Disable specific auto-imports in config
+- Development debugging: #imports for seeing all auto-imports
+
+## Performance Impact of Auto-imports
+- Bundle size: Auto-imports don't affect final bundle
+- Tree-shaking: Unused auto-imports are eliminated
+- Build time: Scanning for auto-imports affects build speed
+- Type checking: More auto-imports = slower TypeScript
+- IDE performance: Too many auto-imports slow autocomplete
+
+## Auto-import Configuration Patterns
+- Custom directories: Add custom auto-import directories
+- External packages: Auto-import from npm packages
+- Selective imports: Import only specific functions/components
+- Prefixes: Add prefixes to avoid naming conflicts
+- Disabled imports: Disable problematic auto-imports
+
+## TypeScript Auto-import Integration
+- Type-only imports: Import types without runtime impact
+- Global types: Auto-import global type definitions
+- Module augmentation: Extend auto-import types
+- Strict mode: Enable strict TypeScript with auto-imports
+- Type generation: Auto-generate types for custom composables
+
+## Development Experience Patterns
+- IDE integration: ESLint rules for auto-import usage
+- Error handling: Clear errors for missing auto-imports
+- Documentation: Auto-generate docs for auto-imported APIs
+- Debugging: Source maps work correctly with auto-imports
+- Hot reload: Auto-imports update without restart
+
+## Auto-import Best Practices
+- Consistent naming: Follow Vue/Nuxt naming conventions
+- Single responsibility: One composable per file
+- Clear exports: Use default exports for components
+- Avoid index files: Direct file imports are clearer
+- Type safety: Always provide TypeScript types
+
+## Common Auto-import Antipatterns
+- Side effect imports: Don't execute code during import
+- Circular dependencies: Avoid composables importing each other
+- Large files: Split large composables into smaller ones
+- Dynamic imports: Don't auto-import dynamically generated code
+- External side effects: Avoid auto-imports that affect global state

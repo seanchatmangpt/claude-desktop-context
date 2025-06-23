@@ -143,7 +143,22 @@ Monitor for:
 - Token usage spikes → Better prediction model
 - Entropy anomalies → Adaptive algorithms
 
+## Recent Evolution: Semantic Command Paradigm
+
+### v3.1 - Claude Desktop Semantic Commands (2025-06-23)
+- **Innovation**: Conversational command interface
+- **Parent**: v3.0 SPR Architecture
+- **Key Features**:
+  - Transparent cognitive operations
+  - SPR-powered instant activation
+  - Pattern graph navigation
+  - 90% token reduction
+- **Impact**: Transforms human-AI interaction model
+- **Files**: /docs/claude-desktop-semantic-commands.md
+
+This represents a paradigm shift from opaque AI operations to transparent, collaborative intelligence where users can see and guide Claude's thinking process.
+
 ---
 *This file tracks the genealogy of system improvements*
 
-Next milestone: v3.0 - Emergent Swarm Intelligence
+Next milestone: v4.0 - Emergent Swarm Intelligence

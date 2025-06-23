@@ -1,0 +1,29 @@
+#!/bin/bash
+# Claude Commands CLI - Quick access to CDCS commands
+
+CDCS_PATH="/Users/sac/claude-desktop-context"
+PYTHON_SCRIPT="$CDCS_PATH/scripts/claude_commands.py"
+
+# Check if running interactively or with command
+if [ $# -eq 0 ]; then
+    # Interactive mode
+    echo "🔮 Claude Command System - Interactive Mode"
+    echo "Type commands (e.g., /help) or 'exit' to quit"
+    echo ""
+    
+    while true; do
+        read -p "claude> " cmd
+        
+        if [ "$cmd" = "exit" ] || [ "$cmd" = "quit" ]; then
+            echo "👋 Goodbye!"
+            break
+        fi
+        
+        # Execute command
+        python3 "$PYTHON_SCRIPT" <<< "$cmd"
+        echo ""
+    done
+else
+    # Direct command mode
+    python3 "$PYTHON_SCRIPT" <<< "$*"
+fi

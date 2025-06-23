@@ -1,0 +1,109 @@
+name: Test Coverage Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run unit tests with coverage
+      run: npm run test:coverage
+
+    - name: Validate 80/20 coverage rule
+      run: npm run test:validate-coverage
+
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        directory: ./coverage
+        fail_ci_if_error: true
+
+    - name: Comment coverage on PR
+      if: github.event_name == 'pull_request'
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        recreate: true
+        message: |
+          ## 📊 Test Coverage Report
+          
+          The coverage validation has completed. Please check that:
+          
+          - ✅ **Unit tests**: Should comprise ~80% of test suite
+          - ✅ **Integration tests**: Should comprise ~20% of test suite  
+          - ✅ **Line coverage**: Should be ≥80%
+          - ✅ **Function coverage**: Should be ≥80%
+          - ✅ **Branch coverage**: Should be ≥70%
+          
+          **CDCS Enhanced Testing Strategy:**
+          - Unit tests focus on SPR functions, prediction algorithms, and pattern extraction
+          - Integration tests cover auto-predict, auto-optimize, and development loop workflows
+          - E2E tests validate complete CDCS system functionality
+          
+          See the full coverage report in the job artifacts.
+
+    - name: Store coverage artifacts
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: coverage-report
+        path: |
+          coverage/
+          .cdcs/coverage_report.json
+        retention-days: 30
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: test-coverage
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run integration tests
+      run: npm run test:integration
+
+    - name: Test CDCS autonomous workflows
+      run: |
+        npm run auto:predict
+        npm run patterns:extract
+        npm run benchmark:nuxt
+
+    - name: Validate SPR system integration
+      run: |
+        npm run spr:activate component_architecture
+        npm run spr:validate
+        npm run spr:generate
+
+    - name: Store integration test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: integration-test-results
+        path: .cdcs/
+        retention-days: 7

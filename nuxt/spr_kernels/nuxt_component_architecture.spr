@@ -1,0 +1,56 @@
+# Nuxt Component Architecture SPR Kernel v1.0
+# Core patterns for Nuxt.js component development and structure
+
+## File-Based Routing Patterns
+- Pages auto-routing: `/pages/[...slug].vue` → dynamic routes
+- Layout inheritance: `default.vue`, `admin.vue`, `auth.vue`
+- Middleware execution: `global → layout → page → component`
+- Route meta configuration via `definePageMeta()`
+
+## Component Composition Patterns
+- Auto-import: `#components`, `#composables`, `#utils`
+- Server-side rendering: `<ClientOnly>` for client-specific components
+- Hydration patterns: `useState()` for SSR state preservation
+- Component lazy loading: `defineAsyncComponent()` for performance
+
+## SSR/SPA/Static Generation Modes
+- Universal: `ssr: true` (default) - server + client rendering
+- SPA: `ssr: false` - client-side only application
+- Static: `nitro.prerender.routes` - pre-generated static files
+- Hybrid: route-level rendering modes via `routeRules`
+
+## Composable Architecture
+- State management: `useState('key', () => defaultValue)`
+- Data fetching: `$fetch`, `useFetch`, `useLazyFetch`
+- SEO optimization: `useSeoMeta()`, `useHead()`
+- Navigation: `navigateTo()`, `useRoute()`, `useRouter()`
+
+## Auto-Import Conventions
+- Components: `~/components/` → `<BaseButton>` from `base/Button.vue`
+- Composables: `~/composables/` → `useAuth()` from `useAuth.ts`
+- Utils: `~/utils/` → automatic import of utility functions
+- Plugins: `~/plugins/` → automatic registration
+
+## Performance Optimization Patterns
+- Tree-shaking: ES modules and auto-imports reduce bundle size
+- Code splitting: automatic page-level splitting
+- Critical CSS: inline critical styles, defer non-critical
+- Image optimization: `<NuxtImg>` with automatic format conversion
+
+## TypeScript Integration
+- Type-safe routes: auto-generated route types
+- Component props: full TypeScript inference
+- API types: shared types between server and client
+- Environment variables: typed via `.env` schema
+
+## Error Handling Patterns
+- Error pages: `~/error.vue` for global error handling
+- Client-side errors: `onErrorCaptured()` lifecycle
+- Server-side errors: proper status codes and fallbacks
+- Validation: input validation with proper error states
+
+## State Hydration
+- Server state → client state seamless transfer
+- Prevent hydration mismatches with proper SSR patterns
+- Cookie-based state persistence across requests
+- Session management with server-side validation

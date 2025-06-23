@@ -1,0 +1,55 @@
+# Nuxt Modules Ecosystem SPR Kernel v1.0
+# 80% of Nuxt projects use 5-10 modules - optimize module selection and configuration
+
+## Essential Module Categories (80% Usage)
+- Styling: @nuxtjs/tailwindcss, @nuxtjs/color-mode, @nuxt/ui
+- State: @pinia/nuxt for complex state, useState for simple state
+- SEO: @nuxtjs/seo, @nuxtjs/sitemap, @nuxtjs/robots
+- Analytics: @nuxtjs/google-analytics, @nuxtjs/plausible
+- Content: @nuxt/content for documentation/blogs
+- Auth: @sidebase/nuxt-auth, @nuxtjs/supabase
+- Images: @nuxt/image for optimization
+- Icons: @nuxt/icon, @nuxtjs/google-fonts
+
+## Module Configuration Patterns
+- Module order matters: content modules first, UI modules last
+- Environment-specific modules: analytics only in production
+- Performance modules: @nuxtjs/critters for CSS inlining
+- Development modules: @nuxt/devtools, @nuxtjs/eslint-module
+
+## Auto-import Optimization
+- Components: ~/components auto-imported by default
+- Composables: ~/composables auto-imported with useX pattern
+- Utils: ~/utils auto-imported for shared functions
+- Modules: Each module adds its own auto-imports
+- Conflicts: Prefix imports when conflicts occur
+
+## Module Selection Decision Tree
+- Styling: TailwindCSS (80%) > UnoCSS (15%) > Custom CSS (5%)
+- State: Pinia for complex > useState for simple > Vuex (legacy)
+- Auth: Supabase for full-stack > Auth0 for enterprise > Custom for specific needs
+- Content: @nuxt/content for static > Strapi for dynamic > Headless CMS
+
+## Performance Impact Patterns
+- Bundle size: Each module adds ~10-50KB to bundle
+- Build time: Modules can increase build time 20-200%
+- Runtime: SSR modules affect server performance
+- Tree-shaking: Modern modules are tree-shakeable
+
+## Common Module Conflicts
+- TailwindCSS + UnoCSS: Choose one CSS framework
+- Multiple auth modules: Stick to one auth solution
+- Icon libraries: @nuxt/icon vs @nuxtjs/svg for performance
+- Analytics: Multiple tracking scripts hurt performance
+
+## Module Configuration Best Practices
+- Use TypeScript for better module configuration
+- Enable module build optimization in production
+- Configure module-specific environment variables
+- Use module playground for testing configurations
+
+## Troubleshooting Patterns
+- Module not working: Check module compatibility with Nuxt 3
+- Build errors: Check module order in nuxt.config.ts
+- Performance issues: Audit module bundle contributions
+- Type errors: Ensure module types are properly imported

@@ -1,0 +1,93 @@
+# Nuxt SEO Meta Management SPR Kernel v1.0
+# SEO optimization patterns used in 80%+ of production Nuxt applications
+
+## Core SEO Meta Patterns
+- useSeoMeta: Primary API for meta tag management
+- useHead: Lower-level API for custom head management
+- Page-level meta: definePageMeta for route-specific SEO
+- Global meta: nuxt.config.ts for site-wide defaults
+- Dynamic meta: Reactive meta based on content/data
+- Template meta: Reusable meta templates for similar pages
+
+## Essential Meta Tags (80% Usage)
+- Title: Page title with site name template
+- Description: 150-160 character descriptions
+- Keywords: Relevant keywords (still matters for some search engines)
+- Canonical: Prevent duplicate content issues
+- Open Graph: Facebook/social media sharing
+- Twitter Cards: Twitter-specific sharing metadata
+- Viewport: Mobile-responsive meta tag
+- Robots: Control search engine crawling
+
+## Open Graph Optimization Patterns
+- og:title: Often different from page title
+- og:description: Can be longer than meta description
+- og:image: High-quality images (1200x630px recommended)
+- og:url: Canonical URL for sharing
+- og:type: website, article, product, etc.
+- og:site_name: Consistent site branding
+- og:locale: Language and region specification
+
+## Twitter Card Patterns
+- twitter:card: summary, summary_large_image, app, player
+- twitter:site: @username for the site
+- twitter:creator: @username for content creator
+- twitter:title: Twitter-specific title (can differ from og:title)
+- twitter:description: Twitter-specific description
+- twitter:image: Twitter-optimized images
+
+## Structured Data Implementation
+- JSON-LD: Preferred format for structured data
+- Schema.org: Use appropriate schema types
+- Product schema: For e-commerce sites
+- Article schema: For blog posts and news
+- Organization schema: For company information
+- Breadcrumb schema: For navigation structure
+
+## Dynamic SEO Content Patterns
+- Content-based meta: Generate meta from CMS content
+- User-generated content: Handle UGC SEO safely
+- Pagination meta: rel="next" and rel="prev" for paginated content
+- Category pages: Template-based SEO for category listings
+- Product pages: Dynamic product SEO with schema
+- Blog posts: Author, publication date, article schema
+
+## Performance SEO Patterns
+- Critical CSS: Inline critical CSS for faster rendering
+- Image optimization: Use @nuxt/image for SEO-friendly images
+- Lazy loading: Proper lazy loading without affecting SEO
+- Core Web Vitals: Optimize LCP, FID, CLS for search rankings
+- Page speed: Fast loading times improve search rankings
+- Mobile optimization: Mobile-first indexing considerations
+
+## SEO-Friendly URL Patterns
+- Slug generation: Clean, readable URLs from content
+- Internationalization: Proper URL structure for multiple languages
+- Trailing slashes: Consistent URL formatting
+- URL parameters: SEO-friendly parameter handling
+- Redirects: Proper redirect implementation for moved content
+- Canonical URLs: Handle multiple URLs for same content
+
+## Content SEO Optimization
+- Heading hierarchy: Proper H1, H2, H3 structure
+- Internal linking: Strategic internal link building
+- Image alt text: Descriptive alt attributes for accessibility/SEO
+- Content freshness: Update dates and content freshness signals
+- Keyword optimization: Natural keyword integration
+- Content length: Adequate content depth for ranking
+
+## Technical SEO Implementation
+- Sitemap generation: Automatic XML sitemap creation
+- Robots.txt: Proper robots.txt configuration
+- 404 handling: SEO-friendly 404 pages with helpful navigation
+- HTTPS enforcement: Secure connection requirements
+- Page loading: Avoid JavaScript-dependent content for crawlers
+- Crawl budget: Optimize for efficient crawler resource usage
+
+## SEO Monitoring and Analytics
+- Google Search Console: Integration for performance monitoring
+- Analytics: Track organic search performance
+- Core Web Vitals: Monitor user experience metrics
+- Search rankings: Track keyword positioning
+- Click-through rates: Optimize meta titles/descriptions
+- Crawl errors: Monitor and fix crawling issues

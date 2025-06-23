@@ -1,0 +1,71 @@
+# Nuxt API Patterns SPR Kernel v1.0
+# Server-side API development patterns and best practices
+
+## Server API Route Structure
+- API routes: `/server/api/` → `/api/` endpoints
+- Route parameters: `[id].get.ts` → `/api/users/123`
+- HTTP methods: `.get.ts`, `.post.ts`, `.put.ts`, `.delete.ts`
+- Catch-all routes: `[...].ts` for flexible routing
+
+## Request/Response Patterns
+- Request parsing: `await readBody(event)` for POST data
+- Query parameters: `getQuery(event)` for URL params
+- Headers: `getHeaders(event)` and `setHeaders(event, {})`
+- Status codes: `setResponseStatus(event, 201)` for proper HTTP responses
+
+## Middleware Chains
+- Global middleware: `/server/middleware/` runs on every request
+- Route-specific: inline middleware in API handlers
+- Authentication: JWT validation, session checks
+- Validation: input sanitization and schema validation
+- CORS: cross-origin request handling
+- Rate limiting: prevent API abuse
+
+## Database Integration Patterns
+- Prisma: `prisma.user.findMany()` with type safety
+- Drizzle: lightweight ORM with SQL-like syntax
+- Direct SQL: raw queries with proper escaping
+- Connection pooling: efficient database connections
+- Migrations: schema versioning and updates
+
+## Authentication Patterns
+- JWT tokens: generation, validation, refresh
+- Session-based: server-side session storage
+- OAuth integration: Google, GitHub, social providers
+- Password hashing: bcrypt for secure storage
+- Role-based access: user permissions and roles
+
+## Error Handling
+- Try-catch blocks: proper error boundaries
+- HTTP error codes: 400, 401, 403, 404, 500
+- Error responses: consistent JSON error format
+- Logging: server-side error tracking
+- Validation errors: field-specific error messages
+
+## Data Validation
+- Zod schemas: runtime type validation
+- Input sanitization: prevent injection attacks
+- File upload validation: size, type, security
+- Rate limiting: prevent abuse and spam
+- CSRF protection: cross-site request forgery
+
+## Caching Strategies
+- Response caching: `cachedFunction()` for expensive operations
+- Redis integration: external cache for scalability
+- ETags: conditional requests for bandwidth saving
+- CDN integration: static asset optimization
+- Database query caching: reduce database load
+
+## API Documentation
+- OpenAPI/Swagger: auto-generated documentation
+- Type definitions: shared between client/server
+- Example requests: clear usage patterns
+- Error codes: documented error scenarios
+- Versioning: API version management
+
+## Production Patterns
+- Environment variables: secure configuration
+- Health checks: `/api/health` endpoint
+- Monitoring: request/response logging
+- Performance metrics: response time tracking
+- Security headers: HTTPS, CSP, security best practices

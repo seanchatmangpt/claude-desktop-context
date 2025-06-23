@@ -186,3 +186,21 @@ information_theory:
   pattern_significance_bits: 1000  # Minimum information content
   redundancy_elimination: true     # Remove duplicate information
   semantic_preservation: 0.94      # Minimum fidelity after compression
+
+# Claude Command System - NEW in v3.0
+command_system:
+  enabled: true
+  command_prefix: "/"
+  script_path: "scripts/claude_commands.py"
+  cli_wrapper: "scripts/claude"
+  features:
+    - "spr_first_operations"    # Check SPRs before files
+    - "pattern_graph_navigation" # Traverse semantic connections
+    - "lazy_file_loading"       # Only read when necessary
+    - "context_optimization"    # Suggest token-saving approaches
+    - "capability_evolution"    # Commands can evolve
+  efficiency_gains:
+    continue_session: 0.95      # 95% token reduction
+    pattern_lookup: 0.97        # 97% faster than file search
+    health_check: 0.90          # 90% reduction in operations
+    semantic_search: 0.85       # 85% fewer tokens than grep

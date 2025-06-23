@@ -1,14 +1,25 @@
-# SPR: Capability Evolution State
-System learns from emergent behaviors and novel combinations.
-Capabilities evolve through fitness-driven selection.
+# Capability Evolution SPR Kernel
+# Tracks system capabilities and their evolution
 
-Discovered Capabilities:
-- advanced automation loops
-- claude-cli-mcp-integration-pattern
-- claude-code-mcp-integration
-- information-theoretic-optimization
-- ollama automation
-- recursive-self-documentation
-- terminal-automation-capabilities
+## Current Capabilities
+- SPR-first operations with 80%+ token efficiency
+- Pattern detection and graph navigation
+- Autonomous prediction and improvement
+- Anti-hallucination validation
+- Hybrid persistence (files + SPR)
+- Nanosecond coordination for agents
+- Self-modifying architecture
 
-Evolution metrics: accuracy>0.8, token_savings>0.5, user_satisfaction>0.7
+## Evolution Triggers
+- Performance below 80% efficiency
+- Pattern frequency > 5 occurrences
+- User request for enhancement
+- Failure rate > 20%
+- New use case discovery
+
+## Fitness Functions
+- Token efficiency: target >80%
+- Response time: target <100ms
+- Accuracy: target >98%
+- Automation level: increasing
+- Complexity: decreasing

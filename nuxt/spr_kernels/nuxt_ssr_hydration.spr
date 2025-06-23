@@ -1,0 +1,68 @@
+# Nuxt SSR Hydration SPR Kernel v1.0
+# Critical patterns to prevent hydration mismatches - the #1 Nuxt developer issue
+
+## Hydration Mismatch Prevention (Critical 80%)
+- Client-only content: Use <ClientOnly> for browser-specific features
+- Date/time displays: Always format dates consistently server/client
+- Random content: Generate random values server-side, pass to client
+- User-specific content: Load after hydration or use <ClientOnly>
+- Browser APIs: window, document, localStorage must be client-only
+- Dynamic imports: Lazy load components that use browser APIs
+- Conditional rendering: Ensure server/client render same initial state
+
+## SSR Performance Patterns
+- Data fetching: useFetch, useLazyFetch for optimal loading
+- Payload size: Minimize server-side data transfer
+- Component splitting: Separate SSR and client-only logic
+- Preload critical data: Use server-side data fetching
+- Avoid waterfalls: Fetch data in parallel when possible
+- Cache strategies: Use cachedFunction for expensive operations
+
+## State Hydration Strategies
+- useState: For reactive state that needs SSR hydration
+- sessionStorage/localStorage: Use refreshCookie for persistence
+- Pinia: Automatic SSR state hydration
+- Initial payload: Keep initial state minimal for faster hydration
+- State serialization: Ensure state is JSON serializable
+
+## Common Hydration Pitfalls
+- Viewport-dependent rendering: Media queries change server/client
+- Timezone differences: Server UTC vs client local time
+- Dynamic classes: CSS-in-JS can cause class name mismatches
+- Component keys: Missing keys cause Vue hydration errors
+- Async components: Proper loading states prevent layout shifts
+
+## SSR Optimization Techniques
+- Streaming: Enable streaming for faster TTFB
+- Critical CSS: Inline critical styles, defer non-critical
+- Resource hints: Preload, prefetch critical resources
+- Component lazy loading: Split non-critical components
+- Bundle optimization: Tree-shake unused SSR code
+
+## Error Boundaries for SSR
+- Hydration errors: Graceful fallbacks for hydration failures
+- Network errors: Offline support and retry mechanisms
+- Component errors: Error boundaries prevent full page crashes
+- Data loading errors: Skeleton states and error messages
+- Graceful degradation: Progressive enhancement patterns
+
+## Development vs Production SSR
+- Development: Hot reload preserves SSR state
+- Production: Optimized SSR with minimal runtime
+- Preview mode: Test SSR behavior before deployment
+- Debug tools: Vue devtools SSR debugging
+- Performance monitoring: Track hydration performance
+
+## Platform-Specific SSR Patterns
+- Vercel: Edge runtime optimizations
+- Netlify: Function-based SSR
+- Cloudflare: Workers with SSR
+- Node.js: Traditional server-side rendering
+- Static generation: Pre-render at build time
+
+## SEO and SSR Integration
+- Meta tags: Server-rendered for crawler visibility
+- Open Graph: SSR ensures social media previews
+- Structured data: JSON-LD rendered server-side
+- Canonical URLs: Proper URL handling across environments
+- Sitemap generation: Server-side sitemap creation
