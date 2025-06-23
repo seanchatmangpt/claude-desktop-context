@@ -51,7 +51,7 @@ if [[ -n "$FREQUENT_OPS" ]]; then
             
             if [[ -z "$existing" ]]; then
                 log "Creating optimization task for $name"
-                "$CDCS_HOME/coordination_helper_v2.sh" claim "auto_optimize" \
+                "$CDCS_HOME/coordination_helper_v3.sh" claim "auto_optimize" \
                     "Optimize high-frequency operation: $name" "medium" >/dev/null 2>&1
             fi
         fi
@@ -71,7 +71,7 @@ if [[ $ERROR_COUNT -gt 5 ]]; then
         log "Most common error: $error_msg"
         
         # Create self-healing task
-        "$CDCS_HOME/coordination_helper_v2.sh" claim "self_healing" \
+        "$CDCS_HOME/coordination_helper_v3.sh" claim "self_healing" \
             "Fix recurring error: $error_msg" "high" >/dev/null 2>&1
     fi
 fi
@@ -112,7 +112,7 @@ if [[ $WORK_QUEUE -gt 0 ]]; then
     
     if [[ -n "$OLDEST_WORK" ]]; then
         log "Starting work on: $OLDEST_WORK"
-        "$CDCS_HOME/coordination_helper_v2.sh" update "$OLDEST_WORK" "10" "Started by autonomous system" >/dev/null 2>&1
+        "$CDCS_HOME/coordination_helper_v3.sh" update "$OLDEST_WORK" "10" "Started by autonomous system" >/dev/null 2>&1
     fi
 fi
 
@@ -170,7 +170,7 @@ if [[ $HEALTH -lt 50 ]]; then
     log "CRITICAL: Low health score, initiating self-improvement..."
     
     # Create high-priority improvement task
-    "$CDCS_HOME/coordination_helper_v2.sh" claim "critical_improvement" \
+    "$CDCS_HOME/coordination_helper_v3.sh" claim "critical_improvement" \
         "System health critical ($HEALTH/100) - investigate and fix" "critical" >/dev/null 2>&1
 fi
 
