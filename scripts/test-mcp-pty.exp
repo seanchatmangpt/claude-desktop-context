@@ -1,0 +1,79 @@
+#!/usr/bin/expect -f
+# Test Claude MCP using expect with PTY allocation
+
+set timeout 30
+log_user 1
+
+# Create test file
+exec echo "MCP PTY Test - [clock format [clock seconds]]" > /tmp/mcp_pty_test.txt
+
+puts "Starting Claude with PTY allocation..."
+
+# Spawn Claude with PTY
+spawn -noecho claude --dangerously-skip-permissions
+
+# Wait for Claude to be ready (look for prompt indicators)
+expect {
+    timeout { 
+        puts "\nTIMEOUT waiting for Claude"
+        exit 1 
+    }
+    "Welcome to Claude" { puts "\nClaude started!" }
+    ">" { puts "\nGot prompt!" }
+    "Tips for getting started" { puts "\nClaude is ready!" }
+}
+
+# Send return to clear any initial state
+send "\r"
+sleep 1
+
+# Send our test command character by character with delays
+puts "\n\nSending test command..."
+foreach char [split "Read /tmp/mcp_pty_test.txt" {}] {
+    send -- $char
+    sleep 0.05
+}
+send "\r"
+
+# Wait for response
+expect {
+    timeout { puts "\nTIMEOUT waiting for file read" }
+    "MCP PTY Test" { 
+        puts "\n✅ SUCCESS! Claude read the file content!"
+        set success 1
+    }
+    "I don't have" {
+        puts "\n❌ Claude says it doesn't have access"
+        set success 0
+    }
+    "I cannot" {
+        puts "\n❌ Claude cannot access files"
+        set success 0
+    }
+}
+
+# Try to create a file
+puts "\n\nTesting file creation..."
+send "Create a file at /tmp/mcp_pty_created.txt with content 'PTY test success'\r"
+
+expect {
+    timeout { puts "TIMEOUT on file creation" }
+    "created" { puts "File creation command acknowledged" }
+    "Created" { puts "File creation command acknowledged" }
+}
+
+# Exit
+send "exit\r"
+expect eof
+
+# Check results
+if {[file exists /tmp/mcp_pty_created.txt]} {
+    puts "\n✅ File was created! MCP is working!"
+    exec cat /tmp/mcp_pty_created.txt
+} else {
+    puts "\n❌ File was not created"
+}
+
+# Cleanup
+catch {exec rm /tmp/mcp_pty_test.txt}
+catch {exec rm /tmp/mcp_pty_created.txt}

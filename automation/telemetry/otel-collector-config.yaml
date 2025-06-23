@@ -1,0 +1,203 @@
+# OpenTelemetry Collector Configuration for CDCS
+# This configuration sets up the OTLP collector to receive, process, and export telemetry data
+
+receivers:
+  # OTLP receiver for gRPC
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+        cors:
+          allowed_origins:
+            - "http://localhost:*"
+            - "http://127.0.0.1:*"
+
+  # Host metrics receiver for system monitoring
+  hostmetrics:
+    collection_interval: 30s
+    scrapers:
+      cpu:
+      disk:
+      filesystem:
+      load:
+      memory:
+      network:
+      process:
+        include:
+          names: [python3, Terminal, osascript]
+          match_type: regexp
+
+  # Prometheus receiver for custom metrics
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'cdcs_automation'
+          scrape_interval: 30s
+          static_configs:
+            - targets: ['localhost:9090']
+
+processors:
+  # Batch processor for efficiency
+  batch:
+    timeout: 10s
+    send_batch_size: 1024
+    send_batch_max_size: 2048
+
+  # Memory limiter to prevent OOM
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 512
+    spike_limit_mib: 128
+
+  # Resource processor to add metadata
+  resource:
+    attributes:
+      - key: service.namespace
+        value: cdcs
+        action: insert
+      - key: deployment.environment
+        from_attribute: CDCS_ENV
+        action: insert
+      - key: host.name
+        action: insert
+
+  # Attributes processor for data enrichment
+  attributes:
+    actions:
+      - key: cdcs.version
+        value: "2.1.0"
+        action: insert
+      - key: telemetry.sdk.name
+        value: "opentelemetry"
+        action: insert
+
+  # Filter processor to reduce noise
+  filter:
+    error_mode: ignore
+    traces:
+      span:
+        - 'duration >= 100ms'
+    metrics:
+      metric:
+        - 'name == "cdcs.agent.executions" or name == "cdcs.patterns.detected" or name == "cdcs.fixes.applied"'
+
+  # Tail sampling for traces
+  tail_sampling:
+    decision_wait: 10s
+    num_traces: 10000
+    expected_new_traces_per_sec: 100
+    policies:
+      - name: errors-policy
+        type: status_code
+        status_code: {status_codes: [ERROR]}
+      - name: slow-traces-policy
+        type: latency
+        latency: {threshold_ms: 1000}
+      - name: important-operations
+        type: string_attribute
+        string_attribute: {key: agent.name, values: [TerminalOrchestrator, SelfHealingLoop]}
+      - name: probabilistic-policy
+        type: probabilistic
+        probabilistic: {sampling_percentage: 10}
+
+exporters:
+  # Console exporter for debugging
+  logging:
+    loglevel: info
+    sampling_initial: 10
+    sampling_thereafter: 100
+
+  # File exporter for local storage
+  file:
+    path: /Users/sac/claude-desktop-context/automation/telemetry/traces.json
+    rotation:
+      max_megabytes: 100
+      max_days: 7
+      max_backups: 3
+
+  # Prometheus exporter for metrics
+  prometheus:
+    endpoint: "0.0.0.0:9090"
+    namespace: cdcs
+    const_labels:
+      service: automation
+
+  # OTLP exporter for remote backend (if configured)
+  otlp/remote:
+    endpoint: "${REMOTE_OTLP_ENDPOINT}"
+    tls:
+      insecure: true
+    retry_on_failure:
+      enabled: true
+      initial_interval: 5s
+      max_interval: 30s
+      max_elapsed_time: 300s
+
+  # Jaeger exporter for trace visualization
+  jaeger:
+    endpoint: localhost:14250
+    tls:
+      insecure: true
+
+service:
+  # Telemetry for the collector itself
+  telemetry:
+    logs:
+      level: info
+      development: false
+      encoding: json
+      output_paths: ["/Users/sac/claude-desktop-context/automation/logs/otel_collector.log"]
+    metrics:
+      level: detailed
+      address: 0.0.0.0:8888
+
+  # Pipeline definitions
+  pipelines:
+    # Traces pipeline
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch, resource, attributes, tail_sampling]
+      exporters: [logging, file, jaeger]
+
+    # Metrics pipeline
+    metrics:
+      receivers: [otlp, hostmetrics, prometheus]
+      processors: [memory_limiter, batch, resource, attributes, filter]
+      exporters: [logging, prometheus]
+
+    # Logs pipeline
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, batch, resource]
+      exporters: [logging, file]
+
+  # Extensions
+  extensions: [health_check, pprof, zpages]
+
+extensions:
+  # Health check endpoint
+  health_check:
+    endpoint: 0.0.0.0:13133
+    path: "/health"
+
+  # Performance profiling
+  pprof:
+    endpoint: 0.0.0.0:1777
+
+  # zPages for debugging
+  zpages:
+    endpoint: 0.0.0.0:55679
+
+# Connector configuration for derived metrics
+connectors:
+  spanmetrics:
+    histogram:
+      explicit:
+        buckets: [100ms, 250ms, 500ms, 1s, 5s, 10s, 30s]
+    dimensions:
+      - name: agent.name
+      - name: method.name
+    exclude_dimensions:
+      - span.kind

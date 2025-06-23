@@ -1,0 +1,80 @@
+# Pattern Composition Grammar
+# Defines rules for combining patterns
+
+composition_rules:
+  
+  # Sequential Composition
+  sequence:
+    description: "Patterns applied one after another"
+    notation: "A → B → C"
+    rules:
+      - "Output of A must satisfy prerequisites of B"
+      - "Combined confidence = product of individual confidences"
+      - "Total time = sum of individual times"
+    examples:
+      - "discover → validate → integrate"
+      - "compress → store → index"
+      
+  # Parallel Composition  
+  parallel:
+    description: "Patterns executed simultaneously"
+    notation: "A || B || C"
+    rules:
+      - "Patterns must not conflict"
+      - "Shared resources must be thread-safe"
+      - "Results merge through synthesizer"
+    examples:
+      - "explore-domain-1 || explore-domain-2 || explore-domain-3"
+      - "analyze-code || analyze-docs || analyze-tests"
+      
+  # Conditional Composition
+  conditional:
+    description: "Pattern selection based on runtime context"
+    notation: "IF condition THEN A ELSE B"
+    rules:
+      - "Condition must be deterministic"
+      - "Both branches must have same postconditions"
+      - "Evaluation must be side-effect free"
+    examples:
+      - "IF memory > 80% THEN compress ELSE continue"
+      - "IF pattern-exists THEN apply ELSE discover"
+  # Recursive Composition
+  recursive:
+    description: "Pattern calls itself with modified context"
+    notation: "A(n) → A(n-1) → ... → A(0)"
+    rules:
+      - "Must have termination condition"
+      - "Each recursion must make progress"
+      - "Stack depth must be bounded"
+    examples:
+      - "self-improve(n) → self-improve(n-1)"
+      - "decompose-problem → decompose-subproblem"
+      
+  # Loop Composition
+  loop:
+    description: "Pattern repeats until condition met"
+    notation: "WHILE condition DO A"
+    rules:
+      - "Loop invariant must be maintained"
+      - "Progress must be measurable"
+      - "Timeout must be specified"
+    examples:
+      - "WHILE not-optimal DO refine"
+      - "WHILE context-available DO explore"
+
+# Constraints
+constraints:
+  
+  mutual_exclusion:
+    description: "Patterns that cannot be active simultaneously"
+    pairs:
+      - ["verbatim-recall", "spr-compression"]
+      - ["single-thread", "parallel-orchestration"]
+      - ["fast-execution", "deep-analysis"]
+      
+  required_sequences:
+    description: "Patterns that must occur in specific order"
+    sequences:
+      - ["discover", "validate", "integrate"]
+      - ["checkpoint", "experiment", "restore|commit"]
+      - ["analyze", "plan", "execute", "verify"]

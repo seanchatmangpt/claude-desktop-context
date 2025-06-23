@@ -1,0 +1,74 @@
+[
+  {
+    "work_item_id": "work_1750647729941382000",
+    "agent_id": "cdcs_agent_1750647729939096000",
+    "claimed_at": "2025-06-23T03:02:10Z",
+    "estimated_duration": "30m",
+    "work_type": "test_observability",
+    "priority": "high",
+    "description": "Testing comprehensive OpenTelemetry instrumentation",
+    "status": "active",
+    "team": "otel_test_team",
+    "telemetry": {
+      "trace_id": "00f53c36840badc2b4f1bb8aff8cd488",
+      "span_id": "79e4841740e038b2",
+      "operation": "cdcs.work.claim",
+      "service": "cdcs-coordination",
+      "component": "coordination_helper"
+    }
+  },
+  {
+    "work_item_id": "work_1750649258596656000",
+    "agent_id": "cdcs_agent_1750649258594050000",
+    "claimed_at": "2025-06-23T03:27:38Z",
+    "estimated_duration": "30m",
+    "work_type": "otel_test",
+    "priority": "high",
+    "description": "Testing OpenTelemetry integration",
+    "status": "active",
+    "team": "test_team",
+    "telemetry": {
+      "trace_id": "10bc40c0122fa403f165212a36cd7121",
+      "span_id": "f94625733a4b2df5",
+      "operation": "cdcs.work.claim",
+      "service": "cdcs-coordination",
+      "component": "coordination_helper"
+    }
+  },
+  {
+    "work_item_id": "work_1750649287593366000",
+    "agent_id": "cdcs_agent_1750649287590676000",
+    "claimed_at": "2025-06-23T03:28:07Z",
+    "estimated_duration": "30m",
+    "work_type": "metrics_test",
+    "priority": "medium",
+    "description": "Test metrics collection",
+    "status": "active",
+    "team": "otel_team",
+    "telemetry": {
+      "trace_id": "0c435e93792ad75f689dcd6131dda263",
+      "span_id": "aeba4bffd1ac8c14",
+      "operation": "cdcs.work.claim",
+      "service": "cdcs-coordination",
+      "component": "coordination_helper"
+    }
+  },
+  {
+    "work_item_id": "work_1750650706959745000",
+    "agent_id": "cdcs_agent_1750650706956865000",
+    "claimed_at": "2025-06-23T03:51:47Z",
+    "estimated_duration": "30m",
+    "work_type": "validation",
+    "priority": "high",
+    "description": "Testing trace propagation",
+    "status": "active",
+    "team": "validator",
+    "telemetry": {
+      "trace_id": "1c1673059f31d569ff0db7ded3f54fe6",
+      "span_id": "b2a91492e158f4ec",
+      "operation": "cdcs.work.claim",
+      "service": "cdcs-coordination",
+      "component": "coordination_helper"
+    }
+  }
+]

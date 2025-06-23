@@ -1,0 +1,78 @@
+---
+# Pattern Template - Copy this for new patterns
+pattern:
+  name: "Pattern Name Here"
+  category: "persistence|evolution|capability|orchestration|emergence"
+  confidence: 0.0  # 0.0 to 1.0
+  
+context:
+  when: "Describe when this pattern applies"
+  prerequisites: 
+    - "Required pattern 1"
+    - "Required capability 2"
+  constraints:
+    - "Limitation 1"
+    - "Boundary condition 2"
+
+problem:
+  statement: "What specific problem does this solve?"
+  forces:
+    - "Competing concern that makes this hard"
+    - "Another tension in the problem space"
+    - "Trade-off that must be balanced"
+
+solution:
+  description: "High-level description of the solution approach"
+  implementation:
+    steps:
+      - "Step 1: Specific action"
+      - "Step 2: Next action"
+      - "Step 3: Validation"
+    code: |
+      # Pseudocode or actual implementation
+      def apply_pattern(context):
+          # Implementation here
+          pass
+  variants:
+    - name: "Variant A"
+      when: "Use in situation X"
+      changes: "Modify step 2 to..."
+consequences:
+  benefits:
+    - "Positive outcome 1"
+    - "Advantage gained"
+    - "Problem solved"
+  liabilities:
+    - "Potential downside"
+    - "Resource cost"
+    - "Complexity introduced"
+  resulting_context: "What state the system is in after pattern application"
+
+relations:
+  requires:      # Patterns that must be applied first
+    - "prerequisite-pattern"
+  enables:       # Patterns this makes possible
+    - "follow-on-pattern"
+  conflicts:     # Patterns that cannot coexist
+    - "incompatible-pattern"
+  refines:       # More general patterns this specializes
+    - "general-pattern"
+  refined_by:    # More specific versions
+    - "specialized-pattern"
+
+examples:
+  - context: "Specific situation where pattern was used"
+    application: "How it was applied"
+    outcome: "What happened (success/failure/learning)"
+    
+  - context: "Another usage scenario"
+    application: "Different application approach"
+    outcome: "Different result"
+
+metadata:
+  discovered: "2024-12-06T10:00:00Z"
+  last_used: "2024-12-06T10:00:00Z"
+  usage_count: 0
+  success_rate: 0.0
+  evolution_stage: "hypothesis|tested|proven|integrated"
+  notes: "Additional observations about the pattern"

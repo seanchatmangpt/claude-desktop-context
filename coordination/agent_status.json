@@ -1,0 +1,58 @@
+[
+  {
+    "agent_id": "cdcs_agent_1750647729939096000",
+    "team": "otel_test_team",
+    "status": "active",
+    "capacity": 100,
+    "current_workload": 0,
+    "specialization": "cdcs_coordination",
+    "last_heartbeat": "2025-06-23T03:02:10Z",
+    "performance_metrics": {
+      "tasks_completed": 0,
+      "average_completion_time": "0m",
+      "success_rate": 100.0
+    }
+  },
+  {
+    "agent_id": "cdcs_agent_1750649258594050000",
+    "team": "test_team",
+    "status": "active",
+    "capacity": 100,
+    "current_workload": 0,
+    "specialization": "cdcs_coordination",
+    "last_heartbeat": "2025-06-23T03:27:39Z",
+    "performance_metrics": {
+      "tasks_completed": 0,
+      "average_completion_time": "0m",
+      "success_rate": 100.0
+    }
+  },
+  {
+    "agent_id": "cdcs_agent_1750649287590676000",
+    "team": "otel_team",
+    "status": "active",
+    "capacity": 100,
+    "current_workload": 0,
+    "specialization": "cdcs_coordination",
+    "last_heartbeat": "2025-06-23T03:28:08Z",
+    "performance_metrics": {
+      "tasks_completed": 0,
+      "average_completion_time": "0m",
+      "success_rate": 100.0
+    }
+  },
+  {
+    "agent_id": "cdcs_agent_1750650706956865000",
+    "team": "validator",
+    "status": "active",
+    "capacity": 100,
+    "current_workload": 0,
+    "specialization": "cdcs_coordination",
+    "last_heartbeat": "2025-06-23T03:51:47Z",
+    "performance_metrics": {
+      "tasks_completed": 0,
+      "average_completion_time": "0m",
+      "success_rate": 100.0
+    }
+  }
+]

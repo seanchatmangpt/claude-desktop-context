@@ -1,0 +1,98 @@
+#!/usr/bin/expect -f
+# Interactive MCP test using expect
+# Tests if Claude CLI can actually use Desktop Commander
+
+set timeout 30
+set test_file "/tmp/mcp_expect_test_[clock seconds].txt"
+set test_content "MCP Test via Expect - [clock format [clock seconds]]"
+
+# Create test file
+exec echo "$test_content" > $test_file
+puts "Created test file: $test_file"
+puts "Content: $test_content\n"
+
+# Start Claude
+puts "Starting Claude CLI..."
+spawn claude --dangerously-skip-permissions
+
+# Wait for Claude to start
+sleep 2
+
+# Test 1: List files
+puts "\n=== Test 1: List files in /tmp ==="
+send "List all files in /tmp using desktop-commander\r"
+expect {
+    timeout { puts "TIMEOUT on file listing" }
+    "mcp_expect_test" { puts "✅ File listing appears to work!" }
+}
+
+# Test 2: Read our test file
+puts "\n=== Test 2: Read specific file ==="
+send "Read the file $test_file using desktop-commander\r"
+expect {
+    timeout { 
+        puts "❌ TIMEOUT - MCP may not be working"
+        set success 0
+    }
+    "$test_content" {
+        puts "✅ SUCCESS! Claude read our test file content!"
+        set success 1
+    }
+    "I don't have access" {
+        puts "❌ Claude says it doesn't have access to Desktop Commander"
+        set success 0
+    }
+    "MCP NOT WORKING" {
+        puts "❌ Claude explicitly says MCP is not working"
+        set success 0
+    }
+}
+
+# Test 3: Create a file
+puts "\n=== Test 3: Create a file ==="
+set create_file "/tmp/mcp_created_by_claude.txt"
+send "Create a file at $create_file with the content 'Created by Claude via MCP' using desktop-commander\r"
+expect {
+    timeout { puts "TIMEOUT on file creation" }
+    "created" { puts "Claude says file was created" }
+    "Created" { puts "Claude says file was created" }
+}
+
+# Give it time to complete
+sleep 3
+
+# Exit Claude
+send "exit\r"
+expect eof
+
+# Check if file was actually created
+if {[file exists $create_file]} {
+    set fp [open $create_file r]
+    set created_content [read $fp]
+    close $fp
+    puts "\n✅ File creation VERIFIED!"
+    puts "   Content: $created_content"
+    file delete $create_file
+} else {
+    puts "\n❌ File was NOT created"
+}
+
+# Cleanup
+file delete $test_file
+
+# Summary
+puts "\n========================================"
+puts "MCP INTEGRATION TEST COMPLETE"
+puts "========================================"
+
+if {[info exists success] && $success == 1} {
+    puts "✅ MCP IS WORKING! Desktop Commander is accessible from Claude."
+} else {
+    puts "❌ MCP TEST FAILED - Desktop Commander may not be properly connected"
+    puts "\nTo fix:"
+    puts "1. Run: claude mcp list"
+    puts "2. If desktop-commander not listed, run:"
+    puts "   claude mcp add desktop-commander /Users/sac/.npm/_npx/4b4c857f6efdfb61/node_modules/.bin/desktop-commander"
+}
+
+exit

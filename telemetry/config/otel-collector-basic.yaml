@@ -1,0 +1,98 @@
+# Basic OpenTelemetry Collector Configuration
+# For use with standard otelcol binary (not contrib)
+
+receivers:
+  # OTLP receiver for standard OpenTelemetry protocol
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+        cors:
+          allowed_origins:
+            - "*"
+
+  # Host metrics receiver
+  hostmetrics:
+    collection_interval: 10s
+    scrapers:
+      cpu:
+      memory:
+      disk:
+      filesystem:
+      network:
+      load:
+
+  # Prometheus receiver for custom metrics
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'cdcs-coordination'
+          scrape_interval: 15s
+          static_configs:
+            - targets: ['localhost:8080']
+          metrics_path: /metrics
+
+processors:
+  # Memory limiter
+  memory_limiter:
+    limit_mib: 256
+    spike_limit_mib: 128
+    check_interval: 5s
+
+  # Batch processor for efficiency
+  batch:
+    timeout: 1s
+
+exporters:
+  # Logging exporter for development
+  logging:
+    loglevel: info
+
+  # File exporter for persistent storage
+  file:
+    path: /Users/sac/claude-desktop-context/telemetry/data/traces.jsonl
+
+  # OTLP exporter
+  otlp:
+    endpoint: localhost:4317
+    tls:
+      insecure: true
+
+  # Prometheus exporter for metrics
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    namespace: cdcs
+    const_labels:
+      system: cdcs
+      environment: development
+
+  # Jaeger exporter for trace visualization
+  jaeger:
+    endpoint: localhost:14250
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    # Traces pipeline
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [logging, file]
+
+    # Metrics pipeline
+    metrics:
+      receivers: [otlp, hostmetrics, prometheus]
+      processors: [memory_limiter, batch]
+      exporters: [logging, prometheus]
+
+  extensions: []
+
+  telemetry:
+    logs:
+      level: info
+    metrics:
+      level: detailed
+      address: 0.0.0.0:8888

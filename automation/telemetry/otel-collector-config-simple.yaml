@@ -1,0 +1,75 @@
+# Simplified OpenTelemetry Collector Configuration for CDCS
+# Compatible with basic otelcol binary
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    timeout: 10s
+    send_batch_size: 1024
+
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 512
+
+  attributes:
+    actions:
+      - key: service.namespace
+        value: cdcs
+        action: insert
+      - key: cdcs.version
+        value: "2.1.0"
+        action: insert
+
+exporters:
+  logging:
+    loglevel: info
+    sampling_initial: 10
+    sampling_thereafter: 100
+
+  file:
+    path: /Users/sac/claude-desktop-context/automation/telemetry/traces.json
+
+  prometheus:
+    endpoint: "0.0.0.0:9090"
+    namespace: cdcs
+
+service:
+  telemetry:
+    logs:
+      level: info
+      output_paths: ["/Users/sac/claude-desktop-context/automation/logs/otel_collector.log"]
+    metrics:
+      level: detailed
+      address: 0.0.0.0:8888
+
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch, attributes]
+      exporters: [logging, file]
+
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, batch, attributes]
+      exporters: [logging, prometheus]
+
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [logging, file]
+
+  extensions: [health_check, zpages]
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+  zpages:
+    endpoint: 0.0.0.0:55679

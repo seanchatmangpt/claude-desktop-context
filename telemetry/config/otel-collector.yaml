@@ -1,0 +1,171 @@
+# OpenTelemetry Collector Configuration
+# Comprehensive observability for CDCS and all components
+
+receivers:
+  # OTLP receiver for standard OpenTelemetry protocol
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+        cors:
+          allowed_origins:
+            - "*"
+
+  # File log receiver for shell script logs
+  filelog:
+    include:
+      - /Users/sac/claude-desktop-context/telemetry/logs/*.log
+      - /Users/sac/claude-desktop-context/coordination/telemetry_spans.jsonl
+      - /Users/sac/claude-desktop-context/logs/*.log
+    operators:
+      - type: json_parser
+        id: json_parser
+        parse_from: attributes.log
+        parse_to: attributes
+      - type: timestamp_parser
+        id: timestamp_parser
+        parse_from: attributes.timestamp
+        layout: '%Y-%m-%dT%H:%M:%S.%fZ'
+
+  # Host metrics receiver
+  hostmetrics:
+    collection_interval: 10s
+    scrapers:
+      cpu:
+        metrics:
+          system.cpu.utilization:
+            enabled: true
+      disk:
+      filesystem:
+      load:
+      memory:
+      network:
+      process:
+        mute_process_name_error: true
+        mute_process_exe_error: true
+        mute_process_io_error: true
+
+  # Prometheus receiver for custom metrics
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'cdcs-coordination'
+          scrape_interval: 15s
+          static_configs:
+            - targets: ['localhost:8080']
+          metrics_path: /metrics
+
+processors:
+  # Memory limiter
+  memory_limiter:
+    limit_mib: 256
+
+  # Batch processor for efficiency
+  batch:
+    timeout: 1s
+    send_batch_size: 8192
+    send_batch_max_size: 16384
+
+  # Resource processor to add service info
+  resource:
+    attributes:
+      - key: service.name
+        value: cdcs-system
+        action: insert
+      - key: service.version
+        value: 2.0.0
+        action: insert
+      - key: deployment.environment
+        value: development
+        action: insert
+      - key: host.name
+        from_attribute: host.name
+        action: insert
+
+  # Attributes processor for trace enhancement
+  attributes:
+    actions:
+      - key: cdcs.session_id
+        from_attribute: session.id
+        action: insert
+      - key: cdcs.agent_id
+        from_attribute: agent.id
+        action: insert
+      - key: cdcs.component
+        from_attribute: component
+        action: insert
+
+  # Filter processor to clean up noisy logs
+  filter:
+    logs:
+      exclude:
+        match_type: regexp
+        resource_attributes:
+          - key: log.level
+            value: "DEBUG"
+
+exporters:
+  # Logging exporter for development
+  logging:
+    loglevel: info
+    sampling_initial: 5
+    sampling_thereafter: 200
+
+  # File exporter for persistent storage
+  file:
+    path: /Users/sac/claude-desktop-context/telemetry/data/traces.jsonl
+
+  # OTLP exporter (for external observability backends)
+  otlp:
+    endpoint: http://localhost:4317
+    insecure: true
+    headers:
+      api-key: "development"
+
+  # Prometheus exporter for metrics
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    namespace: cdcs
+    const_labels:
+      system: cdcs
+      environment: development
+
+  # Jaeger exporter for trace visualization
+  jaeger:
+    endpoint: http://localhost:14250
+    insecure: true
+
+service:
+  pipelines:
+    # Traces pipeline
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, resource, attributes, batch]
+      exporters: [logging, file, jaeger]
+
+    # Metrics pipeline
+    metrics:
+      receivers: [otlp, hostmetrics, prometheus]
+      processors: [memory_limiter, resource, batch]
+      exporters: [logging, prometheus]
+
+    # Logs pipeline
+    logs:
+      receivers: [otlp, filelog]
+      processors: [memory_limiter, resource, filter, batch]
+      exporters: [logging, file]
+
+  extensions: []
+
+  telemetry:
+    logs:
+      level: info
+      development: true
+      sampling:
+        initial: 5
+        thereafter: 200
+    metrics:
+      level: detailed
+      address: 0.0.0.0:8888

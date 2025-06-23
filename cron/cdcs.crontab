@@ -1,0 +1,43 @@
+# CDCS Crontab Configuration
+# Install with: crontab /Users/sac/claude-desktop-context/cron/cdcs.crontab
+#
+# Schedule:
+# - Directory structure: Every hour
+# - Memory monitor: Every 30 minutes  
+# - Pattern analytics: Every hour
+# - Change tracker: Every 15 minutes
+# - Performance metrics: Every hour
+# - Entropy analysis: Every 2 hours
+# - Context aggregator: Every hour (5 min after others)
+#
+# All scripts log to /Users/sac/claude-desktop-context/cron/logs/
+
+# Set PATH for cron environment
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+# Directory structure snapshot - Every hour at :00
+0 * * * * /bin/bash /Users/sac/claude-desktop-context/cron/scripts/directory_structure.sh >> /Users/sac/claude-desktop-context/cron/logs/directory_structure.log 2>&1
+
+# Memory activity monitor - Every 30 minutes at :00 and :30
+0,30 * * * * /bin/bash /Users/sac/claude-desktop-context/cron/scripts/memory_monitor.sh >> /Users/sac/claude-desktop-context/cron/logs/memory_monitor.log 2>&1
+
+# Pattern analytics - Every hour at :01
+1 * * * * /bin/bash /Users/sac/claude-desktop-context/cron/scripts/pattern_analytics.sh >> /Users/sac/claude-desktop-context/cron/logs/pattern_analytics.log 2>&1
+
+# Change tracker - Every 15 minutes
+*/15 * * * * /bin/bash /Users/sac/claude-desktop-context/cron/scripts/change_tracker.sh >> /Users/sac/claude-desktop-context/cron/logs/change_tracker.log 2>&1
+
+# Performance metrics - Every hour at :02  
+2 * * * * /bin/bash /Users/sac/claude-desktop-context/cron/scripts/performance_metrics.sh >> /Users/sac/claude-desktop-context/cron/logs/performance_metrics.log 2>&1
+
+# Entropy analyzer - Every 2 hours at :03
+3 */2 * * * /bin/bash /Users/sac/claude-desktop-context/cron/scripts/entropy_analyzer.sh >> /Users/sac/claude-desktop-context/cron/logs/entropy_analyzer.log 2>&1
+
+# Master context aggregator - Every hour at :05 (after other jobs complete)
+5 * * * * /bin/bash /Users/sac/claude-desktop-context/cron/scripts/context_aggregator.sh >> /Users/sac/claude-desktop-context/cron/logs/context_aggregator.log 2>&1
+
+# Cleanup old logs - Daily at 3:00 AM (keep last 7 days)
+0 3 * * * find /Users/sac/claude-desktop-context/cron/logs -name "*.log" -mtime +7 -delete
+
+# Cleanup old snapshots - Daily at 3:05 AM (keep last 3 days)
+5 3 * * * find /Users/sac/claude-desktop-context/cron/snapshots -name "*_20*.txt" -mtime +3 -delete

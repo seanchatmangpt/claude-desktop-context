@@ -1,0 +1,67 @@
+#!/usr/bin/expect -f
+# Test Claude with proper mode handling
+
+set timeout 30
+log_user 1
+
+puts "=== CLAUDE MCP TEST WITH VIM MODE HANDLING ==="
+puts ""
+
+spawn claude --dangerously-skip-permissions
+
+# Wait for Claude to start
+expect {
+    "-- INSERT --" { 
+        puts "\nClaude is in INSERT mode, sending ESC..."
+        send "\033"  ;# ESC key
+    }
+    timeout { puts "Timeout"; exit 1 }
+}
+
+# Now we should be in NORMAL mode
+sleep 1
+
+# Try typing a command
+send "i"  ;# Enter insert mode
+send "/permissions\r"
+send "\033"  ;# Back to normal mode
+
+# Wait for response
+expect {
+    timeout { puts "Timeout waiting for permissions" }
+    "desktop-commander" { 
+        puts "\n✅ Desktop Commander found!"
+        set found 1
+    }
+    "MCP" { puts "MCP section found" }
+    -re ".*" { }
+}
+
+# Test file reading
+puts "\n\nTesting file read..."
+exec echo "VIM Mode Test - [clock format [clock seconds]]" > /tmp/vim_test.txt
+
+send "i"
+send "Read /tmp/vim_test.txt\r"
+send "\033"
+
+expect {
+    timeout { puts "Timeout" }
+    "VIM Mode Test" { 
+        puts "\n✅ SUCCESS! File was read!"
+        set success 1
+    }
+}
+
+# Exit
+send ":q\r"
+expect eof
+
+# Cleanup
+exec rm -f /tmp/vim_test.txt
+
+if {[info exists success]} {
+    puts "\n✅ MCP IS WORKING!"
+} else {
+    puts "\n❌ Could not verify MCP"
+}

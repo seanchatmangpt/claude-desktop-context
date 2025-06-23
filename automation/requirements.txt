@@ -1,0 +1,11 @@
+# CDCS Automation Requirements
+# Install with: pip3 install -r requirements.txt
+
+# Core dependencies
+numpy>=1.21.0
+psutil>=5.8.0
+networkx>=2.6.0
+scikit-learn>=0.24.0
+
+# Optional but recommended
+# community  # For community detection in networkx (install with: pip3 install python-louvain)

@@ -1,0 +1,123 @@
+#!/usr/bin/expect -f
+# Check and test Claude permissions for Desktop Commander
+
+set timeout 30
+log_user 1
+
+puts "=== CHECKING CLAUDE PERMISSIONS FOR DESKTOP COMMANDER ==="
+puts ""
+
+# Start Claude
+spawn claude --dangerously-skip-permissions
+
+# Wait for Claude to be ready
+expect {
+    "Tips for getting started" { puts "\nClaude started successfully!" }
+    timeout { puts "\nTimeout waiting for Claude"; exit 1 }
+}
+
+# Send /permissions command
+puts "\nChecking permissions..."
+send "/permissions\r"
+
+# Wait for permissions output
+expect {
+    timeout { 
+        puts "\nTimeout waiting for permissions"
+        exit 1
+    }
+    -re "desktop.commander.*" {
+        puts "\n✅ Desktop Commander found in permissions!"
+        set found_dc 1
+        exp_continue
+    }
+    "MCP servers" {
+        puts "\nMCP servers section found"
+        exp_continue
+    }
+    "Available tools" {
+        puts "\nTools section found"
+        exp_continue
+    }
+    ">" {
+        puts "\nGot prompt back"
+    }
+}
+
+# Now test if Desktop Commander actually works
+puts "\n\nTesting Desktop Commander..."
+
+# Create a test file
+exec echo "Permission Test Success - [clock format [clock seconds]]" > /tmp/permission_test.txt
+
+# Ask Claude to read it
+send "Read the file /tmp/permission_test.txt\r"
+
+# Look for the response
+expect {
+    timeout {
+        puts "\n❌ Timeout waiting for file read"
+        set success 0
+    }
+    "Permission Test Success" {
+        puts "\n✅ SUCCESS! Claude read the file using Desktop Commander!"
+        set success 1
+    }
+    "I'll read the file" {
+        puts "\nClaude is attempting to read..."
+        exp_continue
+    }
+    "approve" {
+        puts "\nClaude is asking for approval - sending yes"
+        send "yes\r"
+        exp_continue
+    }
+    "I don't have" {
+        puts "\n❌ Claude says it doesn't have access"
+        set success 0
+    }
+}
+
+# Try to create a file to double-check
+puts "\n\nTesting file creation..."
+send "Create a file at /tmp/claude_created_test.txt with the content 'MCP is working!'\r"
+
+expect {
+    timeout { puts "Timeout on file creation" }
+    "created" { puts "Claude acknowledged file creation" }
+    "approve" { 
+        puts "Approval requested - sending yes"
+        send "yes\r"
+        exp_continue
+    }
+}
+
+# Give it time
+sleep 2
+
+# Exit Claude
+send "exit\r"
+expect eof
+
+# Check if file was created
+if {[file exists /tmp/claude_created_test.txt]} {
+    set content [exec cat /tmp/claude_created_test.txt]
+    puts "\n✅ File creation CONFIRMED! Content: $content"
+    exec rm /tmp/claude_created_test.txt
+} else {
+    puts "\n❌ File was not created"
+}
+
+# Cleanup
+exec rm -f /tmp/permission_test.txt
+
+# Summary
+puts "\n========================================"
+if {[info exists success] && $success == 1} {
+    puts "✅ MCP INTEGRATION IS WORKING!"
+    puts "Desktop Commander can be used from Claude!"
+} else {
+    puts "❓ MCP status unclear - may need manual approval"
+    puts "Try running 'claude' and using /permissions manually"
+}
+puts "========================================"

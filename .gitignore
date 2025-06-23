@@ -1,0 +1,54 @@
+# CDCS .gitignore
+
+# System files
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+
+# Logs
+*.log
+logs/
+*.jsonl
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+.cache/
+
+# Session-specific data that changes frequently
+memory/sessions/active/chunk_*.md
+telemetry/data/
+telemetry/logs/
+telemetry/metrics/
+
+# Work in progress
+work/locks/
+work/work_claims.json
+
+# Local configuration overrides
+*.local
+config.local.json
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Node modules (if any MCP servers installed locally)
+node_modules/
+npm-debug.log*
+
+# Keep empty directories with .gitkeep
+!**/.gitkeep

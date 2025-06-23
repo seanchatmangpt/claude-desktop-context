@@ -1,0 +1,9 @@
+{"data": {
+    "timestamp": "2025-06-23T04:53:45Z",
+    "metrics": {
+        "avg_hourly_spans": 84,
+        "current_hour_spans":     1556,
+        "error_count": 10,
+        "deviation_percent": 1731
+    }
+}, "analysis": "null"}

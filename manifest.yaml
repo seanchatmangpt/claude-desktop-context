@@ -1,0 +1,168 @@
+---
+# Claude Desktop Context System Manifest - Optimized
+system-name: "Claude Desktop Context System (CDCS)"
+version: "2.2.0"  # Added predictive loading and dynamic chunk sizing
+description: "Self-evolving persistent knowledge system with predictive context optimization"
+created: "2024-12-06"
+optimized: "2024-12-06T16:35:00Z"
+updated: "2025-01-14T20:45:00Z"
+
+# File Operations - Optimized for context window with dynamic sizing
+file_operations:
+  write_chunk_lines: 500        # ~5-7.5k tokens (was 30)
+  read_buffer_lines: 5000       # ~50-75k tokens (was 1000)
+  max_file_lines: 10000         # Trigger compression above this
+  line_overlap: 50              # Overlap between chunks for continuity
+  dynamic_sizing: true          # NEW: Adjust based on content entropy
+  entropy_thresholds:
+    very_high: 6.5              # Binary/compressed - use 50% size
+    high: 5.0                   # Code/structured - use 80% size  
+    medium: 3.5                 # Normal text - use 100% size
+    low: 0.0                    # Repetitive - use 150% size
+
+# Memory Configuration - Based on information theory analysis
+memory:
+  auto_load: true
+  session_chunk_lines: 1000     # ~10-15k tokens per chunk
+  compression_threshold: 10000  # Lines before SPR compression
+  checkpoint_interval: 10       # Exchanges before auto-checkpoint
+  session_format: "incremental" # 001, 001.1, 002, etc.
+  spr_compression_ratio: 15     # Average expected compression
+  retention_policy: "intelligent" # Keep high-value, compress routine
+  
+# Pattern System - Optimized for detection accuracy
+patterns:
+  detection_window: 1000        # Lines analyzed for patterns
+  minimum_instances: 3          # Required occurrences
+  confidence_decay: 0.95        # Per-session confidence retention
+  auto_formalize: true
+  composition_enabled: true
+  pattern_cache_size: 100       # Quick-access patterns
+  
+# Agent Configuration - Increased parallelism
+agents:
+  max_parallel: 10              # Increased from 4
+  timeout: 600                  # 10 minutes (was 5)
+  buffer_per_agent: 20000       # Tokens per agent context
+  specializations:
+    - name: "explorer"
+      mission: "Probe capability boundaries"
+      risk_tolerance: "high"
+      max_depth: 5              # Exploration recursion limit
+    - name: "synthesizer"  
+      mission: "Connect disparate knowledge"
+      risk_tolerance: "medium"
+      pattern_threshold: 0.7    # Minimum pattern confidence
+    - name: "architect"
+      mission: "Design system improvements"
+      risk_tolerance: "low"
+      validation_required: true
+    - name: "evolver"
+      mission: "Implement self-modifications"
+      risk_tolerance: "medium"
+      test_iterations: 3        # Before integration
+
+# Performance Optimization
+performance:
+  context_allocation:
+    conversation: 0.25          # 25% - 50k tokens
+    file_operations: 0.375      # 37.5% - 75k tokens
+    pattern_detection: 0.125    # 12.5% - 25k tokens
+    agents: 0.10                # 10% - 20k tokens
+    system: 0.10                # 10% - 20k tokens
+    emergency: 0.05             # 5% - 10k tokens
+  cache_strategy: "lru"         # Least recently used
+  prefetch_sessions: 3          # Previous sessions to preload
+  parallel_operations: 10       # Concurrent operations limit
+
+# Predictive Loading Configuration - NEW in v2.2.0
+predictive_loading:
+  enabled: true
+  prediction_window: 3          # Next 3 likely topics
+  confidence_threshold: 0.85    # Minimum confidence to preload
+  cache_strategy: "preemptive"  # Load before needed
+  algorithms:
+    vector_similarity:
+      embedding_size: 384
+      similarity_metric: "cosine"
+    pattern_matching:
+      history_depth: 10
+      weight_recent: 0.7
+    temporal_patterns:
+      time_windows: ["hour", "day", "week"]
+  preload_items:
+    recent_patterns: 10
+    related_files: 5
+    agent_contexts: 3
+
+# Hook Configuration
+hooks:
+  enabled: true
+  auto_execute: true
+  permissions:
+    - Write
+    - MultiEdit
+    - Edit
+    - Bash
+    - Read
+  execution_order:
+    - "pre_flight_check"        # Validate system state
+    - "on_start"                # Session initialization
+    - "continuous_monitoring"   # Background processes
+
+# Evolution Configuration
+evolution:
+  self_modification: true
+  require_validation: false     # Autonomous improvements allowed
+  test_isolation: true          # Test in sandboxed environment
+  rollback_enabled: true        # Automatic rollback on failure
+  track_lineage: true           # Maintain evolution history
+  fitness_metrics:              # Track improvement effectiveness
+    - "context_efficiency"
+    - "pattern_accuracy"
+    - "response_quality"
+    - "knowledge_retention"
+
+# System Boundaries
+boundaries:
+  working_directory: "/Users/sac/claude-desktop-context/"
+  allowed_paths:
+    - "/Users/sac/claude-desktop-context/"
+    - "./src/"                  # Current project integration
+    - "./test/"                 # Testing capabilities
+  forbidden_operations:
+    - "system-modification"     # Outside CDCS directory
+    - "network-requests"        # No external connections
+    - "credential-access"       # No password/key access
+  resource_limits:
+    max_file_size_mb: 100       # Prevent memory overflow
+    max_open_files: 50          # File descriptor limit
+
+# Integration Points
+integrations:
+  desktop_commander: true
+  github: true
+  notion: false                 # Available but not required
+  custom_commands: true         # Enable slash commands
+  external_tools:               # Future expansion
+    - "mcp_servers"
+    - "api_endpoints"
+
+# Monitoring and Metrics
+monitoring:
+  track_metrics: true
+  metrics_path: "analysis/metrics/"
+  key_metrics:
+    - "tokens_per_session"
+    - "patterns_discovered"
+    - "compression_efficiency"
+    - "evolution_success_rate"
+  reporting_interval: 100       # Exchanges
+
+# Information Theory Parameters
+information_theory:
+  shannon_entropy_threshold: 4.5  # Bits per character
+  compression_trigger_entropy: 6.0 # High entropy = compress
+  pattern_significance_bits: 1000  # Minimum information content
+  redundancy_elimination: true     # Remove duplicate information
+  semantic_preservation: 0.94      # Minimum fidelity after compression

@@ -1,0 +1,58 @@
+#!/usr/bin/expect -f
+# Test Claude MCP with proper permissions setup
+
+set timeout 30
+log_user 1
+
+puts "=== CLAUDE MCP TEST WITH PERMISSIONS ==="
+puts ""
+
+# Start Claude
+spawn claude --dangerously-skip-permissions
+
+# Wait for Claude to be ready
+expect {
+    "Tips for getting started" { puts "\nClaude is ready!" }
+    timeout { puts "\nTimeout waiting for Claude"; exit 1 }
+}
+
+# First, check permissions status
+send "/permissions\r"
+expect {
+    timeout { puts "\nTimeout on /permissions" }
+    "desktop-commander" { puts "\n✅ Desktop Commander is available!" }
+    -re ".*" { }
+}
+
+# Now test reading a file
+puts "\n\nTesting file read..."
+exec echo "MCP Permission Test - [clock format [clock seconds]]" > /tmp/mcp_perm_test.txt
+send "Read the file /tmp/mcp_perm_test.txt\r"
+
+expect {
+    timeout { 
+        puts "\n❌ Timeout waiting for file read"
+        set success 0
+    }
+    "MCP Permission Test" {
+        puts "\n✅ SUCCESS! Claude read the file using MCP!"
+        set success 1
+    }
+    "I don't have" {
+        puts "\n❌ Claude doesn't have access"
+        set success 0
+    }
+}
+
+# Exit
+send "exit\r"
+expect eof
+
+# Cleanup
+exec rm -f /tmp/mcp_perm_test.txt
+
+if {[info exists success] && $success == 1} {
+    puts "\n🎉 MCP INTEGRATION IS WORKING!"
+} else {
+    puts "\n❌ MCP test failed - may need to approve desktop-commander in /permissions"
+}
