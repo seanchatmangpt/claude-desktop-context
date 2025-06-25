@@ -1,0 +1,285 @@
+cliapi: "1.1.0"
+info:
+  name: jq
+  version: "1.7.0"
+  description: "Command-line JSON processor"
+  author: "Stephen Dolan"
+  license: "MIT"
+
+commands:
+  filter:
+    summary: "Apply jq filter to JSON input"
+    description: "Process JSON data through jq filter expressions"
+    
+    parameters:
+      - name: filter
+        type: argument
+        position: 0
+        required: true
+        schema:
+          type: string
+          description: "jq filter expression"
+          examples: [".name", ".[] | select(.age > 18)", "map(.id)"]
+          
+      - name: files
+        type: argument
+        position: 1
+        required: false
+        variadic: true
+        schema:
+          type: array
+          items:
+            type: string
+            format: file-path
+          description: "Input JSON files (default: stdin)"
+          
+      # Output formatting
+      - name: compact_output
+        type: flag
+        aliases: ["c"]
+        schema:
+          type: boolean
+          default: false
+          description: "Compact instead of pretty-printed output"
+          
+      - name: raw_output
+        type: flag
+        aliases: ["r"]
+        schema:
+          type: boolean
+          default: false
+          description: "Output raw strings, not JSON texts"
+          
+      - name: join_output
+        type: flag
+        aliases: ["j"]
+        schema:
+          type: boolean
+          default: false
+          description: "No newlines after each output"
+          
+      - name: ascii_output
+        type: flag
+        aliases: ["a"]
+        schema:
+          type: boolean
+          default: false
+          description: "Force ASCII output"
+          
+      - name: tab
+        type: flag
+        schema:
+          type: boolean
+          default: false
+          description: "Use tabs for indentation"
+          
+      - name: indent
+        type: option
+        schema:
+          type: integer
+          minimum: 0
+          maximum: 8
+          description: "Number of spaces for indentation"
+          
+      - name: sort_keys
+        type: flag
+        aliases: ["S"]
+        schema:
+          type: boolean
+          default: false
+          description: "Sort object keys in output"
+          
+      # Input modes
+      - name: null_input
+        type: flag
+        aliases: ["n"]
+        schema:
+          type: boolean
+          default: false
+          description: "Use null as input (don't read input)"
+          
+      - name: raw_input
+        type: flag
+        aliases: ["R"]
+        schema:
+          type: boolean
+          default: false
+          description: "Each line of input is a string, not JSON"
+          
+      - name: slurp
+        type: flag
+        aliases: ["s"]
+        schema:
+          type: boolean
+          default: false
+          description: "Read entire input stream into array"
+          
+      # Streaming
+      - name: stream
+        type: flag
+        schema:
+          type: boolean
+          default: false
+          description: "Parse input in streaming fashion"
+          
+      - name: seq
+        type: flag
+        schema:
+          type: boolean
+          default: false
+          description: "Use application/json-seq ASCII RS/LF/RS/LF encoding"
+          
+      # Variables
+      - name: arg
+        type: option
+        multiple: true
+        schema:
+          type: string
+          pattern: "^[a-zA-Z_][a-zA-Z0-9_]*\\s+.*$"
+          description: "Define variable as string: --arg name value"
+          
+      - name: argjson
+        type: option
+        multiple: true
+        schema:
+          type: string
+          pattern: "^[a-zA-Z_][a-zA-Z0-9_]*\\s+.*$"
+          description: "Define variable as JSON: --argjson name value"
+          
+      # Behavior
+      - name: exit_status
+        type: flag
+        aliases: ["e"]
+        schema:
+          type: boolean
+          default: false
+          description: "Set exit status based on output"
+          
+      - name: monochrome_output
+        type: flag
+        aliases: ["M"]
+        schema:
+          type: boolean
+          default: false
+          description: "Disable colored output"
+          
+      - name: color_output
+        type: flag
+        aliases: ["C"]
+        schema:
+          type: boolean
+          default: false
+          description: "Enable colored output"
+
+    responses:
+      success:
+        description: "Filter applied successfully"
+        schema:
+          oneOf:
+            - type: "null"
+            - type: boolean
+            - type: number
+            - type: string
+            - type: array
+              items: {}
+            - type: object
+              additionalProperties: true
+          description: "JSON output (type depends on filter and input)"
+          
+    streams:
+      json_output:
+        description: "Streaming JSON results"
+        content_type: "application/x-ndjson"
+        message:
+          oneOf:
+            - type: "null"
+            - type: boolean
+            - type: number  
+            - type: string
+            - type: array
+              items: {}
+            - type: object
+              additionalProperties: true
+        when: "stream mode or large inputs"
+        
+    errors:
+      - exit_code: 1
+        name: "generic_error"
+        message: "jq error: {error_details}"
+        category: "user_error"
+        
+      - exit_code: 2
+        name: "invalid_input"
+        message: "Invalid JSON input: {parse_error}"
+        category: "user_error"
+        
+      - exit_code: 3
+        name: "compilation_error"
+        message: "Filter compilation error: {filter_error}"
+        category: "user_error"
+        
+      - exit_code: 4
+        name: "execution_error"  
+        message: "Filter execution error: {runtime_error}"
+        category: "user_error"
+        
+      - exit_code: 5
+        name: "empty_output"
+        message: "No output produced"
+        category: "user_error"
+        when: "exit_status flag is set"
+
+schemas:
+  FilterResult:
+    description: "Result of applying jq filter"
+    oneOf:
+      - type: "null"
+      - type: boolean
+      - type: number
+      - type: string
+      - type: array
+        items:
+          $ref: "#/schemas/FilterResult"
+      - type: object
+        additionalProperties:
+          $ref: "#/schemas/FilterResult"
+          
+  Variable:
+    type: object
+    properties:
+      name:
+        type: string
+        pattern: "^[a-zA-Z_][a-zA-Z0-9_]*$"
+      value:
+        description: "Variable value (string for --arg, JSON for --argjson)"
+    required: [name, value]
+
+# Example usage patterns
+examples:
+  basic_filter:
+    summary: "Extract name field"
+    command: 'jq ".name" data.json'
+    
+  array_processing:
+    summary: "Filter array elements"
+    command: 'jq ".[] | select(.age > 18)" users.json'
+    
+  compact_output:
+    summary: "Compact JSON output"
+    command: 'jq -c ".items[]" data.json'
+    
+  raw_strings:
+    summary: "Extract raw string values"
+    command: 'jq -r ".name" users.json'
+    
+  streaming:
+    summary: "Stream large JSON files"
+    command: 'jq --stream "." large-file.json'
+    
+  variables:
+    summary: "Use variables in filter"
+    command: 'jq --arg name "John" ".[] | select(.name == $name)" users.json'
+    
+  stdin_processing:
+    summary: "Process from stdin"
+    command: 'cat data.json | jq ".results[]"'

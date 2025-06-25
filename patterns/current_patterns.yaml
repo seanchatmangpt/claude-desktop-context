@@ -1,0 +1,6 @@
+# Extracted Patterns Mon Jun 23 16:04:38 PDT 2025
+patterns:
+  - name: spr_usage
+    frequency: high
+  - name: validation_checks
+    frequency: medium

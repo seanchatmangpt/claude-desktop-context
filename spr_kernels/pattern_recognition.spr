@@ -5,6 +5,12 @@ Activation spreads through graph based on context relevance.
 
 Active Patterns:
 - information-theoretic-optimization
+- demo-preparation-strategy
+- ecuador-government-analytics
 
-Pattern Connections: information-theory→optimization→compression
-Domain Clusters: evolution, orchestration, persistence
+Pattern Connections: 
+information-theory→optimization→compression→demo-preparation
+ecuador-analytics→roi-visualization→procurement-optimization
+dashboard-components→visualization-strategy→executive-presentation
+
+Domain Clusters: evolution, orchestration, persistence, demo-readiness

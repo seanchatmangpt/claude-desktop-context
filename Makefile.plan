@@ -1,0 +1,257 @@
+# CDCS Makefile Plan v3.0
+# Comprehensive build automation for Claude Desktop Context System
+
+## MAKEFILE STRUCTURE OVERVIEW
+
+### 1. Core System Management
+- Help and documentation targets
+- Version information and system status
+- Installation and setup procedures
+- Health checks and diagnostics
+
+### 2. SPR (Sparse Priming Representation) Operations
+- Kernel activation and management
+- SPR generation from sessions
+- Validation and evolution cycles
+- Token optimization through latent space
+- Performance benchmarking
+
+### 3. Memory and Session Management
+- Session save/recover with SPR-first approach
+- Memory compression and archival
+- Pattern extraction and cataloging
+- Context priming and activation
+- Checkpoint management
+
+### 4. Pattern Recognition System
+- Pattern discovery and validation
+- Graph navigation and updates
+- Pattern evolution tracking
+- Cache management
+
+### 5. Agent Coordination
+- Multi-agent orchestration
+- Work claiming and completion
+- Agent status monitoring
+- Communication protocols
+
+### 6. Web UI Management
+- Semantic Chat UI (Nuxt/pnpm)
+- Web Dashboard (pnpm)
+- Development servers
+- Production builds
+- UI testing
+
+### 7. Automation Framework
+- Python agent management
+- Automation workflows
+- Script execution
+- Dependency management
+
+### 8. Development Tools
+- Code quality (lint, format)
+- Testing frameworks
+- Benchmarking
+- Documentation generation
+- Development environment setup
+
+### 9. Monitoring and Telemetry
+- OpenTelemetry integration
+- Performance metrics
+- System health monitoring
+- Trace analysis
+- Log aggregation
+
+### 10. Deployment and CI/CD
+- Production deployment
+- Environment management
+- Version control operations
+- Continuous integration
+- Release management
+
+### 11. CDCS-XAVOS Bridge
+- Cross-system synchronization
+- Bridge status monitoring
+- Data transfer protocols
+- Coordination commands
+
+### 12. Emergency and Recovery
+- System recovery procedures
+- Backup management
+- Rollback capabilities
+- Debug utilities
+
+## KEY FEATURES TO IMPLEMENT
+
+### Parallel Execution Support
+```makefile
+.NOTPARALLEL: clean install  # Prevent parallel execution for critical targets
+```
+
+### Environment Detection
+```makefile
+SHELL := /bin/bash
+OS := $(shell uname -s)
+ARCH := $(shell uname -m)
+```
+
+### Dynamic Configuration
+```makefile
+-include .env
+CDCS_HOME ?= /Users/sac/claude-desktop-context
+SPR_THRESHOLD ?= 0.7
+TOKEN_LIMIT ?= 200000
+```
+
+### Smart Dependencies
+```makefile
+# SPR kernels depend on session state
+spr_kernels/%.spr: memory/sessions/current.link
+	@./scripts/generate_spr.sh $@
+
+# Web UI builds depend on source changes
+web-ui/dist: web-ui/src/**/*
+	@cd web-ui && pnpm build
+```
+
+### Conditional Targets
+```makefile
+ifeq ($(CDCS_MODE),autonomous)
+all: auto-boot auto-focus auto-improve
+else
+all: help
+endif
+```
+
+### Composite Commands
+```makefile
+# Full system initialization
+init: install-deps setup-dirs init-spr init-memory init-patterns
+
+# Complete development cycle
+dev: lint test benchmark telemetry-check
+
+# Production deployment
+deploy: test build docker-build deploy-prod monitor
+```
+
+### Error Handling
+```makefile
+.DELETE_ON_ERROR:  # Delete targets on error
+.SECONDARY:        # Preserve intermediate files
+```
+
+### Performance Optimization
+```makefile
+# Use native shell for speed
+SHELL := /bin/bash -o pipefail
+
+# Minimize shell invocations
+VERSION := $(shell cat manifest.yaml | grep version | cut -d' ' -f2)
+```
+
+## SUGGESTED TARGET CATEGORIES
+
+### Quick Start
+- `make` - Show help
+- `make init` - One-time setup
+- `make start` - Start all services
+- `make status` - System health check
+
+### Daily Development
+- `make dev` - Start development mode
+- `make test` - Run all tests
+- `make lint` - Code quality checks
+- `make format` - Auto-format code
+
+### SPR Operations
+- `make spr` - Full SPR cycle
+- `make spr-bench` - Benchmark efficiency
+- `make spr-debug` - Debug kernels
+
+### UI Development
+- `make ui` - Start all UIs
+- `make ui-dev` - Development mode
+- `make ui-build` - Production builds
+- `make ui-test` - UI testing
+
+### System Management
+- `make backup` - Full system backup
+- `make restore` - Restore from backup
+- `make update` - Update dependencies
+- `make clean` - Clean all artifacts
+
+### Advanced Operations
+- `make evolve` - Trigger evolution
+- `make optimize` - Full optimization
+- `make analyze` - Deep analysis
+- `make predict` - Predictive operations
+
+## INTEGRATION POINTS
+
+### Git Hooks
+```makefile
+install-hooks:
+	@ln -sf ../../scripts/pre-commit .git/hooks/pre-commit
+	@ln -sf ../../scripts/post-merge .git/hooks/post-merge
+```
+
+### Docker Support
+```makefile
+docker-build:
+	@docker build -t cdcs:latest .
+	@docker build -t cdcs-ui:latest ./web-ui
+```
+
+### CI/CD Integration
+```makefile
+ci: lint test build
+	@echo "CI pipeline complete"
+
+cd: ci docker-build deploy
+	@echo "CD pipeline complete"
+```
+
+## SPECIAL CONSIDERATIONS
+
+1. **Token Efficiency**: All targets should respect token limits
+2. **SPR-First**: Prioritize SPR operations over file operations
+3. **Atomic Operations**: Use file locks for critical sections
+4. **Graceful Degradation**: Fallback when SPR unavailable
+5. **Performance Metrics**: Track execution time and resource usage
+6. **User Experience**: Clear progress indicators and error messages
+7. **Modularity**: Each target should be independently useful
+8. **Idempotency**: Targets should be safe to run multiple times
+
+## EXAMPLE USAGE PATTERNS
+
+### Morning Startup
+```bash
+make start           # Boot all systems
+make status          # Check health
+make suggest-work    # Get AI suggestions
+```
+
+### Development Session
+```bash
+make ui-dev          # Start UI dev server
+make watch           # Watch for changes
+make test-watch      # Continuous testing
+```
+
+### SPR Optimization
+```bash
+make spr-bench       # Baseline performance
+make spr-evolve      # Trigger evolution
+make spr-validate    # Verify improvements
+```
+
+### Production Deployment
+```bash
+make test            # Full test suite
+make build           # Production builds
+make deploy          # Deploy to production
+make monitor         # Start monitoring
+```
+
+This Makefile plan provides a comprehensive automation framework for CDCS v3.0, balancing the sophisticated SPR operations with practical development needs while maintaining the 80%+ token efficiency goal.

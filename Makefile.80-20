@@ -1,0 +1,138 @@
+# CDCS 80/20 Makefile - Essential Commands Only
+# 20% of commands that deliver 80% of value
+
+.DEFAULT_GOAL := help
+SHELL := /bin/bash -o pipefail
+
+# === DAILY ESSENTIALS (Most Used) ===
+.PHONY: help
+help: ## Show this help
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
+
+.PHONY: status
+status: ## Full system status check
+	@./scripts/health_check_spr.sh
+	@echo "\n=== Active Sessions ==="
+	@ls -la memory/sessions/current.link 2>/dev/null || echo "No active session"
+	@echo "\n=== SPR Status ==="
+	@make -s spr-status
+
+.PHONY: work
+work: ## Get AI work suggestions
+	@./scripts/suggest_work_items.sh
+
+.PHONY: save
+save: ## Save current session
+	@./scripts/save_session.sh
+	@./scripts/spr_generator.sh
+
+# === DEVELOPMENT (Core Workflow) ===
+.PHONY: dev
+dev: ## Start all dev servers
+	@echo "Starting Web UIs..."
+	@cd web-ui && pnpm dev &
+	@cd semantic-chat-ui && pnpm dev &
+	@echo "Dev servers starting on ports 3000 and 3001"
+
+.PHONY: test
+test: ## Run essential tests
+	@./scripts/test-cdcs-basic.sh
+	@cd web-ui && pnpm test
+	@cd semantic-chat-ui && pnpm test
+
+.PHONY: build
+build: ## Build for production
+	@cd web-ui && pnpm build
+	@cd semantic-chat-ui && pnpm build
+
+# === SPR ESSENTIALS ===
+.PHONY: spr
+spr: ## Full SPR cycle (generate + validate)
+	@./scripts/spr_generator.sh
+	@./scripts/validate_spr_accuracy.sh
+
+.PHONY: spr-status
+spr-status: ## Show SPR kernel status
+	@ls -la spr_kernels/*.spr 2>/dev/null | tail -5 || echo "No SPR kernels"
+
+# === AUTOMATION ===
+.PHONY: auto
+auto: ## Start autonomous loop
+	@./automation/autonomous_loop.sh
+
+.PHONY: cron
+cron: ## Setup automation cron jobs
+	@./automation/setup_cron.sh
+
+# === QUICK ACTIONS ===
+.PHONY: analyze
+analyze: ## Analyze priorities
+	@./scripts/analyze_priorities.sh
+
+.PHONY: predict
+predict: ## Predict requirements
+	@./scripts/predict_requirements.sh
+
+.PHONY: recover
+recover: ## Recover last session
+	@./scripts/recover_session_spr.sh
+
+# === SYSTEM MANAGEMENT ===
+.PHONY: setup
+setup: ## Initial system setup
+	@./setup_unified_system.sh
+
+.PHONY: update
+update: ## Update dependencies
+	@cd web-ui && pnpm update
+	@cd semantic-chat-ui && pnpm update
+	@cd automation && pip install -r requirements.txt --upgrade
+
+.PHONY: clean
+clean: ## Clean build artifacts
+	@rm -rf web-ui/dist semantic-chat-ui/.nuxt
+	@find . -name "*.pyc" -delete
+	@find . -name "__pycache__" -delete
+
+# === MONITORING ===
+.PHONY: trace
+trace: ## Start trace monitoring
+	@./telemetry/trace_monitor.sh
+
+.PHONY: dashboard
+dashboard: ## Open metrics dashboard
+	@./telemetry/claude_dashboard.sh
+
+# === COMPOSITE COMMANDS ===
+.PHONY: morning
+morning: status work ## Morning startup routine
+
+.PHONY: evening
+evening: save spr ## Evening shutdown routine
+
+.PHONY: refresh
+refresh: save recover ## Quick refresh cycle
+
+# === EMERGENCY ===
+.PHONY: fix
+fix: ## Auto-fix common issues
+	@./scripts/restore-otelcol.sh
+	@./scripts/git-push-readiness-check.sh
+	@echo "Common issues checked and fixed"
+
+.PHONY: reset
+reset: ## Reset to clean state
+	@rm -f memory/sessions/current.link
+	@echo "System reset complete"
+
+# === ONE-LINERS ===
+think: analyze predict work ## Think about what to do next
+focus: spr analyze ## Focus using SPR analysis  
+check: status trace ## Quick health check
+start: setup dev auto ## Start everything
+stop: save ## Stop and save everything
+
+# === QUICK VARS ===
+Q = @
+V = $(if $(VERBOSE),,@)
+TIMESTAMP := $(shell date +%Y%m%d_%H%M%S)
